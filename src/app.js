@@ -8,6 +8,7 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const db = require('./config/database');
 
 // Middleware
 app.use(morgan('dev')); // Logging
@@ -24,9 +25,55 @@ app.set('views', path.join(__dirname, 'views'));
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Database test route
+app.get('/db-test', async (req, res) => {
+  try {
+    // Test query
+    const result = await db.query('SELECT NOW()');
+    res.json({
+      status: 'success',
+      message: 'Database connected successfully',
+      timestamp: result.rows[0].now,
+      database: {
+        host: process.env.POSTGRES_HOST,
+        port: process.env.POSTGRES_PORT,
+        database: process.env.POSTGRES_DB,
+        user: process.env.POSTGRES_USER
+      }
+    });
+  } catch (error) {
+    console.error('Database connection error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Database connection failed',
+      error: error.message,
+      database: {
+        host: process.env.POSTGRES_HOST,
+        port: process.env.POSTGRES_PORT,
+        database: process.env.POSTGRES_DB,
+        user: process.env.POSTGRES_USER
+      }
+    });
+  }
+});
+
 // Routes
-app.get('/', (req, res) => {
-  res.render('index', { title: 'Home' });
+app.get('/', async (req, res) => {
+  try {
+    // Test database connection
+    const dbStatus = await db.query('SELECT NOW()');
+    res.render('index', { 
+      title: 'Home',
+      dbConnected: true,
+      dbTimestamp: dbStatus.rows[0].now
+    });
+  } catch (error) {
+    res.render('index', { 
+      title: 'Home',
+      dbConnected: false,
+      error: error.message
+    });
+  }
 });
 
 // Error handling middleware
