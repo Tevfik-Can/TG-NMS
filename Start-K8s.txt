@@ -1,0 +1,16 @@
+# PostgreSQL Stuff:
+
+kubectl apply -f postgres-configmap.yaml
+    - kubectl get configmap
+kubectl apply -f psql-pv.yaml
+    - kubectl get pv
+kubectl apply -f psql-claim.yaml
+    - kubectl get pvc
+kubectl apply -f ps-deployment.yaml
+    - kubectl get deployments
+    - kubectl get pods
+kubectl apply -f ps-service.yaml
+    - kubectl get svc
+
+# Nodejs Stuff:
+kubectl apply -f nodejs.yaml
