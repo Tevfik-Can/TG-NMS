@@ -1,19 +1,12 @@
-FROM node:20-alpine
+FROM python:3.11-slim
 
-# Create app directory
 WORKDIR /app
 
-# Copy package files first (better layer caching)
-COPY package*.json ./
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies
-RUN npm install
-
-# Copy rest of the application
 COPY . .
 
-# Expose port
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "start"]
+CMD ["python", "app.py"]

@@ -12,5 +12,12 @@ kubectl apply -f ps-deployment.yaml
 kubectl apply -f ps-service.yaml
     - kubectl get svc
 
-# Nodejs Stuff:
-kubectl apply -f nodejs.yaml
+# Python Stuff:
+kubectl apply -f python.yaml
+
+# Building Dockerfile (If a change has been made)
+docker build -t tcgulbent/tg-nms:latest .
+docker push tcgulbent/tg-nms:latest
+
+kubectl delete -f python.yaml
+kubectl apply -f python.yaml
