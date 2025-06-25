@@ -27,7 +27,16 @@ def index():
     # items = cur.fetchall()
     # cur.close()
     # conn.close()
-    return render_template('index.html', items=items)
+    items = []
+
+    # Sidepanel Icons are from https://fontawesome.com/v5/search
+    PanelLinks = {
+        "Main Menu": ["/","fa-home"],
+        "Extra" : ["#", "fa-chart-pie"],
+        "Extraa" : ["#", "fa-chart-pie"],
+        "Extraaa" : ["#", "fa-brain"]
+                        }
+    return render_template('index.html', items=items, PanelLinks = PanelLinks, curr_page = request.path)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000)
+    app.run(host='0.0.0.0', port=3000, debug=True)

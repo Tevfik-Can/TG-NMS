@@ -1,0 +1,23 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+
+
+<nav class="sidebar d-flex flex-column flex-shrink-0 position-fixed">
+    <button class="toggle-btn" onclick="toggleSidebar()">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <div class="p-4">
+        <h4 class="logo-text fw-bold mb-0 hide-on-collapse">TG-NMS</h4>
+        <p class="logo-alt-text small hide-on-collapse">Dashboard</p>
+    </div>
+
+    <div class="nav flex-column">
+        {% for key, values in links.items() %}
+        <a href="{{ values[0] }}" class="sidebar-link {% if curr_page == values[0] %} active {% endif %} text-decoration-none p-3">
+            <i class="fas {{ values[1] }} me-3"></i>
+            <span class="hide-on-collapse">{{ key }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</nav>
