@@ -30,14 +30,15 @@ def index():
     items = []
 
     # Sidepanel Icons are from https://fontawesome.com/v5/search
+    # The Link name lengths have to be consistent otherwise they misalign
     PanelLinks = {
         "Main Menu": ["/","fa-home"],
-        "Extra" : ["#", "fa-chart-pie"],
-        "Extraa" : ["#", "fa-chart-pie"],
-        "Extraaa" : ["#", "fa-brain"],
+        "Extra aa" : ["#", "fa-chart-pie"],
+        "Extraa a" : ["#", "fa-chart-pie"],
+        "Extrraaa" : ["#", "fa-brain"],
         "Extraaaa" : ["#", "fa-brain"],
-        "Testttt" : ["#", "fa-brain"],
-        "Test2" : ["#", "fa-brain"]
+        "Testttta" : ["#", "fa-brain"],
+        "Test2 aa" : ["#", "fa-brain"]
                         }
     return render_template('index.html', items=items, PanelLinks = PanelLinks, curr_page = request.path)
 
