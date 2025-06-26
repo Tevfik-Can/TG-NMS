@@ -36,7 +36,8 @@ def index():
         "Extraa" : ["#", "fa-chart-pie"],
         "Extraaa" : ["#", "fa-brain"],
         "Extraaaa" : ["#", "fa-brain"],
-        "Test" : ["#", "fa-brain"]
+        "Testttt" : ["#", "fa-brain"],
+        "Test2" : ["#", "fa-brain"]
                         }
     return render_template('index.html', items=items, PanelLinks = PanelLinks, curr_page = request.path)
 
