@@ -34,7 +34,9 @@ def index():
         "Main Menu": ["/","fa-home"],
         "Extra" : ["#", "fa-chart-pie"],
         "Extraa" : ["#", "fa-chart-pie"],
-        "Extraaa" : ["#", "fa-brain"]
+        "Extraaa" : ["#", "fa-brain"],
+        "Extraaaa" : ["#", "fa-brain"],
+        "Test" : ["#", "fa-brain"]
                         }
     return render_template('index.html', items=items, PanelLinks = PanelLinks, curr_page = request.path)
 
