@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, 
 import psycopg2
 import os
+from kafka import KafkaConsumer
 
 app = Flask(__name__)
 

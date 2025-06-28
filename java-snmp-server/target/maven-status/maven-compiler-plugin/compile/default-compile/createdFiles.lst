@@ -1,0 +1,4 @@
+com\tgnms\snmpserver\SNMPHandler.class
+com\tgnms\snmpserver\KafkaPublisher.class
+com\tgnms\snmpserver\RestCommandController.class
+com\tgnms\snmpserver\Main.class

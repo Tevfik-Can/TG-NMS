@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Way to use it: .\deploy.sh {UNIQUE NUMBER}  
+
 # Config
 IMAGE_NAME="tcgulbent/tg-nms"
 TAG=$(git rev-parse --short HEAD)  # or use a manual version like v1.0.1
