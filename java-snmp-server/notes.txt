@@ -1,0 +1,11 @@
+All the commands that are used for deployment:
+
+docker-compose up --build
+docker-compose down -v
+docker-compose down -v --remove-orphans
+
+docker build -t snmp-server .
+docker run snmp-server
+
+mvn clean package spring-boot:repackage
+mvn clean package
