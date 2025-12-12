@@ -1,16 +1,16 @@
-package com.tgnms.snmpserver;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        // Obtain the Spring ApplicationContext
+        org.springframework.context.ApplicationContext context = SpringApplication.run(Main.class, args);
 
         // Get the SNMPHandler bean from Spring
         SNMPHandler snmpHandler = context.getBean(SNMPHandler.class);

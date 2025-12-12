@@ -1,10 +1,11 @@
-package com.tgnms.snmpserver;
+import java.util.Properties;
 
-import org.apache.kafka.clients.producer.*;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.stereotype.Service;
-
-import java.util.Properties;
 
 @Service
 public class KafkaPublisher {
