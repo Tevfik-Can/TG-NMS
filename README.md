@@ -1,7 +1,7 @@
 # TG-NMS
 
 ## Overview
-TG-NMS is now a Python Flask web application with a PostgreSQL backend, containerized with Docker and deployable to Kubernetes. This replaces the previous Node.js/Express implementation.
+TG-NMS is a Python Flask–based network management system backed by PostgreSQL, containerized with Docker, and deployable to Kubernetes. The system now includes a Java-based SNMP server, REST API layer, and Kafka publisher subsystem that will power all real network interactions. Placeholder implementations exist today and will be replaced with production-ready code as the system is integrated with an actual network topology.
 
 ---
 
@@ -9,15 +9,22 @@ TG-NMS is now a Python Flask web application with a PostgreSQL backend, containe
 
 ```
 TG-NMS/
-├── app.py                  # Main Python application (Flask)
-├── requirements.txt        # Python dependencies
-├── Dockerfile              # Docker build instructions
-├── templates/              # HTML templates (Jinja2)
+├── app.py                      # Main Python Flask application
+├── requirements.txt            # Python dependencies
+├── Dockerfile                  # Docker build instructions
+├── templates/                  # HTML templates (Jinja2)
 │   ├── layout.html
 │   └── index.html
-├── static/                 # Static files (CSS, JS, images)
+├── static/                     # Static files (CSS, JS)
 │   └── style.css
-└── k8s/                    # Kubernetes manifests
+├── java-snmp-server/           # Java subsystem for network operations
+│   ├── src/main/java/
+│   │   ├── snmp               # SNMP handler
+│   │   ├── api                # REST API
+│   │   └── kafka              # Kafka publisher
+│   ├── pom.xml                 # Maven build configuration
+│   └── README.md               # Java component documentation
+└── k8s/                        # Kubernetes manifests
     ├── python-deployment.yaml
     ├── python-service.yaml
     ├── postgres-deployment.yaml
@@ -27,95 +34,152 @@ TG-NMS/
 
 ---
 
+## Java SNMP Server and Network Pipeline
 
-## Key Changes from Node.js to Python
-### Initially planned on using node js but ultimatetly changed to python flask
-- **Backend:** Switched from Node.js (Express) to Python (Flask)
-- **Templates:** Switched from EJS to Jinja2 (Flask's default)
-- **Database Adapter:** Switched from `pg` (Node.js) to `psycopg2-binary` (Python)
-- **App Entrypoint:** Now `app.py` instead of `src/app.js`
-- **Dependencies:** Now managed in `requirements.txt` instead of `package.json`
-- **Development Workflow:** Use Flask's debug mode for instant reloads
-- **Dockerfile:** Now uses Python base image and pip
+A new `java-snmp-server/` directory has been introduced to host the network-side services of TG-NMS. This subsystem will evolve into the bridge between TG-NMS and real networking devices.
+
+### Components
+
+#### SNMP Handler (Placeholder)
+- Will be replaced with a complete SNMP engine capable of polling devices, receiving traps, and interacting with real routers/switches.  
+- Will integrate directly with a physical or virtual network topology.
+
+#### Kafka Publisher (Placeholder)
+- Will publish telemetry, traps, and device-state updates to Kafka topics.  
+- Python Flask backend will subscribe to these topics for real-time updates.
+
+#### REST API (Placeholder)
+- Will expose device metrics and SNMP-derived state to the Python UI.  
+- Will act as a central communication layer between Flask and the Java network services.
+
+### Future Integration
+Once production implementations are added:
+
+- TG-NMS will pull live data from actual network devices.  
+- Kafka will act as the event backbone.  
+- The REST API will serve device state to the frontend.  
+- The system will function as a true NMS, not just a CRUD interface.
 
 ---
 
 ## Development Workflow (Hot Reload)
 
-### Local Development (Recommended)
+### Python (Flask)
 
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Run Flask in debug mode:
-   ```bash
-   export FLASK_ENV=development
-   flask run
-   # or
-   python app.py
-   ```
-3. Any code change will auto-reload the server.
+**1. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
 
-### Docker Development (with Hot Reload)
+**2. Run Flask in development mode**
+```bash
+export FLASK_ENV=development
+flask run
+# or
+python app.py
+```
 
-1. Build the image:
-   ```bash
-   docker build -t tg-nms-python:dev .
-   ```
-2. Run with volume mount for live reload:
-   ```bash
-   docker run -it --rm -v $(pwd):/app -p 3000:3000 -e FLASK_ENV=development tg-nms-python:dev
-   ```
+**3. Hot reload works automatically during development.**
+
+---
+
+### Docker-Based Development (Hot Reload)
+
+**1. Build**
+```bash
+docker build -t tg-nms-python:dev .
+```
+
+**2. Run with volume mount**
+```bash
+docker run -it --rm \
+  -v $(pwd):/app \
+  -p 3000:3000 \
+  -e FLASK_ENV=development \
+  tg-nms-python:dev
+```
+
+---
+
+### Java Component Development
+
+```bash
+cd java-snmp-server
+mvn clean package
+java -jar target/java-snmp-server.jar
+```
+
+*Docker and Kubernetes manifests for the Java subsystem can be added later.*
 
 ---
 
 ## Production Workflow (Docker/Kubernetes)
 
-1. Build and tag the image:
-   ```bash
-   docker build -t your-dockerhub-username/tg-nms-python:latest .
-   docker push your-dockerhub-username/tg-nms-python:latest
-   ```
-2. Update your Kubernetes deployment YAML to use the new image:
-   ```yaml
-   containers:
-     - name: python-app
-       image: your-dockerhub-username/tg-nms-python:latest
-       ports:
-         - containerPort: 3000
-   ```
-3. Apply the manifests:
-   ```bash
-   kubectl apply -f k8s/
-   ```
+### Build and Push
+```bash
+docker build -t your-dockerhub-username/tg-nms-python:latest .
+docker push your-dockerhub-username/tg-nms-python:latest
+```
+
+### Update the Kubernetes Deployment
+```yaml
+containers:
+  - name: python-app
+    image: your-dockerhub-username/tg-nms-python:latest
+    ports:
+      - containerPort: 3000
+```
+
+### Deploy
+```bash
+kubectl apply -f k8s/
+```
 
 ---
 
 ## Environment Variables
 
-The app uses the following environment variables (set in Kubernetes or locally):
-- `POSTGRES_HOST` (default: `postgres`)
-- `POSTGRES_PORT` (default: `5432`)
-- `POSTGRES_DB` (default: `postgres`)
-- `POSTGRES_USER` (default: `postgres`)
-- `POSTGRES_PASSWORD` (default: `postgres`)
+Environment variables required by the Flask backend:
+
+- `POSTGRES_HOST` (default: `postgres`)  
+- `POSTGRES_PORT` (default: `5432`)  
+- `POSTGRES_DB` (default: `postgres`)  
+- `POSTGRES_USER` (default: `postgres`)  
+- `POSTGRES_PASSWORD` (default: `postgres`)  
+
+Future Java/Kafka environment variables will include:  
+- `KAFKA_BROKER_URL`  
+- `SNMP_LISTEN_PORT`  
+- `JAVA_API_PORT`
 
 ---
 
 ## Database Initialization
 
-The app will automatically create the `test_items` table if it does not exist. You can add, view, and delete items from the web GUI.
+The Flask backend automatically creates the `test_items` table if it does not already exist. Users can add, view, and delete entries through the browser interface.
 
 ---
 
 ## Troubleshooting
 
-- **CrashLoopBackOff:** Check pod logs with `kubectl logs <pod-name>` for Python errors or database connection issues.
-- **Hot Reload Not Working:** Make sure you are running in development mode and using volume mounts if in Docker.
-- **Database Connection Issues:** Ensure the PostgreSQL service is running and environment variables are set correctly.
+### Python
+- **CrashLoopBackOff:**  
+  Check logs:  
+  ```bash
+  kubectl logs <pod-name>
+  ```
+
+- **Hot reload not working:**  
+  Ensure `FLASK_ENV=development` and Docker volume mounts are correctly set.
+
+- **Database connection issues:**  
+  Confirm PostgreSQL service reachability and environment variable configuration.
+
+### Java
+- **SNMP service not responding:**  
+  Ensure required ports are exposed and Kafka is reachable.
+
+- **Kafka publish errors:**  
+  Verify broker connectivity and topic existence.
 
 ---
-
-## License
-MIT 
